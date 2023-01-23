@@ -1,6 +1,7 @@
 package dev.joel.galaxyeconomy.economy;
 
 import dev.joel.galaxyeconomy.GalaxyEconomy;
+import dev.joel.galaxyeconomy.api.events.MoneyPreDepositEvent;
 import dev.joel.galaxyeconomy.api.events.MoneyPreWithdrawEvent;
 import dev.joel.galaxyeconomy.economy.data.DataMap;
 import dev.joel.nu.money.Formatter;
@@ -162,10 +163,13 @@ public class Eco implements net.milkbowl.vault.economy.Economy {
 
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer player, double amount) {
-        final double expected = dataMap.getEconomyMapThingy().get(player.getUniqueId()) + amount;
+        final MoneyPreDepositEvent event = new MoneyPreDepositEvent(player, getBalance(player), amount, false);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) return new EconomyResponse(event.getAmountToDeposit(), event.getBalance(), EconomyResponse.ResponseType.FAILURE, "Cancelled by event cancel.");
+        final double expected = event.getExpectedAfterWithdraw();
         if (expected > Double.MAX_VALUE) throw new IllegalArgumentException();
         dataMap.getEconomyMapThingy().put(player.getUniqueId(), expected);
-        return new EconomyResponse(amount, expected, EconomyResponse.ResponseType.SUCCESS, null);
+        return new EconomyResponse(event.getAmountToDeposit(), expected, EconomyResponse.ResponseType.SUCCESS, null);
     }
 
     @Override

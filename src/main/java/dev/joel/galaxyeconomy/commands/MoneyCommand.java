@@ -49,6 +49,18 @@ public class MoneyCommand implements CommandExecutor {
                                 }
                             }
                             break;
+                        case "add":
+                            final OfflinePlayer playe = Bukkit.getOfflinePlayer(args[1]);
+                            if (playe.hasPlayedBefore() && GalaxyEconomy.getEconomy().hasAccount(playe)) {
+                                try {
+                                    final Eco eco = GalaxyEconomy.getEconomy();
+                                    final double a = Double.parseDouble(args[2]);
+                                    eco.depositPlayer(playe, a);
+                                    sender.sendMessage(String.format("§5§lGALAXY BANK §8» §aFoi adicionado %s para o saldo de %s.", eco.format(a), playe.getName()));
+                                }catch (NumberFormatException e) {
+                                    sender.sendMessage("§cO valor digitado é inválido.");
+                                }
+                            }
                     }
                 }
                 break;
