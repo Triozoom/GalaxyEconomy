@@ -41,7 +41,16 @@ public final class GalaxyEconomy extends JavaPlugin {
 
         saveDefaultConfig();
 
+        BukkitUtil.send("§5___________                                         ");
+        BukkitUtil.send("§5\\_   _____/ ____  ____   ____   ____   _____ ___.__.");
+        BukkitUtil.send("§5 |    __)__/ ___\\/  _ \\ /    \\ /  _ \\ /     <   |  |");
+        BukkitUtil.send("§5 |        \\  \\__(  <_> )   |  (  <_> )  Y Y  \\___  |");
+        BukkitUtil.send("§5/_______  /\\___  >____/|___|  /\\____/|__|_|  / ____|");
+        BukkitUtil.send("§5        \\/     \\/           \\/             \\/\\/     ");
+        BukkitUtil.send("§eStarting initialization...");
+
         economy = vh.hook();
+
         BukkitUtil.INSTANCE.getSqlManager().registerFile(pluginDatabase = new Database(
                 this,
                 UpdateType.JOIN_AND_QUIT,
@@ -49,6 +58,7 @@ public final class GalaxyEconomy extends JavaPlugin {
                 "economy",
                 "`uuid` TEXT, `amount` DOUBLE"
         ));
+
         BukkitUtil.INSTANCE.register("money", new MoneyCommand());
         BukkitUtil.INSTANCE.register(new JAQ());
 
@@ -67,8 +77,11 @@ public final class GalaxyEconomy extends JavaPlugin {
 
         if (BukkitUtil.INSTANCE.isAPlugin("PlaceholderAPI")) {
             new PAPIHook().register();
+        }else {
+            BukkitUtil.send("§5[Economy] §cPlaceholderAPI isn't available, skipping...");
         }
 
+        BukkitUtil.send("§eFinished initialization. Enjoy GalaxyEconomy!");
     }
 
     @Override
