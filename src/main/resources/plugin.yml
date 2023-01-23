@@ -1,0 +1,9 @@
+name: GalaxyEconomy
+version: '${project.version}'
+load: STARTUP
+main: dev.joel.galaxyeconomy.GalaxyEconomy
+description: atgweahbsdzedrtgjn
+depend: [ Vault ]
+softdepend: [ PlaceholderAPI ]
+commands:
+  money:
