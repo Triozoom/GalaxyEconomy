@@ -55,9 +55,12 @@ public final class GalaxyEconomy extends JavaPlugin {
         new BukkitRunnable() {
             @Override
             public void run() {
+                int i = 0;
                 for (final Player playerIn : getServer().getOnlinePlayers()) {
+                    i++;
                     getPluginDatabase().put(playerIn);
                 }
+                BukkitUtil.send(String.format("§5[Economy] §eAutomatically updated data for %d players.", i));
             }
         }.runTaskTimerAsynchronously(this, 0L, 600L);
 
@@ -71,6 +74,12 @@ public final class GalaxyEconomy extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        int i = 0;
+        for (final Player playerIn : getServer().getOnlinePlayers()) {
+            i++;
+            getPluginDatabase().put(playerIn);
+        }
+        BukkitUtil.send(String.format("§5[Economy] §ePlugin execution finished; automatically updated data for %d players.", i));
         vh.unhook();
         pluginDatabase.finishConnection();
     }
