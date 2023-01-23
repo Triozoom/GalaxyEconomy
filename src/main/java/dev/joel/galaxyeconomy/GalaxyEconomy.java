@@ -2,6 +2,7 @@ package dev.joel.galaxyeconomy;
 
 import dev.joel.bukkitutil.BukkitUtil;
 import dev.joel.bukkitutil.sql.enums.UpdateType;
+import dev.joel.bukkitutil.sql.managing.SQLManager;
 import dev.joel.galaxyeconomy.commands.MoneyCommand;
 import dev.joel.galaxyeconomy.economy.Eco;
 import dev.joel.galaxyeconomy.economy.data.Database;
@@ -41,13 +42,13 @@ public final class GalaxyEconomy extends JavaPlugin {
         saveDefaultConfig();
 
         economy = vh.hook();
-        pluginDatabase = new Database(
+        BukkitUtil.INSTANCE.getSqlManager().registerFile(pluginDatabase = new Database(
                 this,
                 UpdateType.JOIN_AND_QUIT,
                 "jOeLpLUgins.JoElpLGUinSdATAbASE.SQLIte",
                 "economy",
                 "`uuid` TEXT, `amount` DOUBLE"
-        );
+        ));
         BukkitUtil.INSTANCE.register("money", new MoneyCommand());
         BukkitUtil.INSTANCE.register(new JAQ());
 
