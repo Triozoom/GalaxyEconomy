@@ -172,6 +172,28 @@ public class Eco implements net.milkbowl.vault.economy.Economy {
         return new EconomyResponse(event.getAmountToDeposit(), expected, EconomyResponse.ResponseType.SUCCESS, null);
     }
 
+    // A, AAT, TP
+    // Amount, Amount After Taxes, Tax Percentage
+    public double[] depositPlayerWithIR(OfflinePlayer player, double amount) {
+        final double IRMultiplication = amount > 1e4 ? (amount > 1e5 ? (amount > 1e6 ? (amount > 1e7 ? (amount > 1e9 ? 0.2760 : 0.2750) : 0.2250) : 0.15) : 0.075) : 1;
+        final double amountAfterTaxes = amount - (amount * IRMultiplication);
+        final double expected = getBalance(player) + amountAfterTaxes;
+        dataMap.getEconomyMapThingy().put(player.getUniqueId(), expected);
+        return new double[] {amount, amountAfterTaxes, IRMultiplication*100};
+    }
+    public double[] depositPlayerWithIRAfterIOF(OfflinePlayer player, double amount) {
+        final double IRMultiplication = amount > 1e4 ? (amount > 1e5 ? (amount > 1e6 ? (amount > 1e7 ? (amount > 1e9 ? 0.2760 : 0.2750) : 0.2250) : 0.15) : 0.075) : 1;
+        final double amountAfterTaxes = amount - (amount * IRMultiplication);
+        final double expected = getBalance(player) + amountAfterTaxes;
+        dataMap.getEconomyMapThingy().put(player.getUniqueId(), expected);
+        return new double[] {amount, amountAfterTaxes, (IRMultiplication+0.035)*100};
+    }
+
+    public double[] depositPlayerWithIRAndIOF(OfflinePlayer player, double amount) {
+        final double amountAfterTax = amount - (amount * 0.035);
+        return depositPlayerWithIRAfterIOF(player, amountAfterTax);
+    }
+
     @Override
     public EconomyResponse depositPlayer(String playerName, String worldName, double amount) {
         return depositPlayer(playerName, amount);
