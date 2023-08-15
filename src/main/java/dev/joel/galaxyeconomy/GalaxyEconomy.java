@@ -4,6 +4,7 @@ import dev.joel.bukkitutil.BukkitUtil;
 import dev.joel.bukkitutil.sql.enums.UpdateType;
 import dev.joel.bukkitutil.sql.managing.SQLManager;
 import dev.joel.galaxyeconomy.commands.MoneyCommand;
+import dev.joel.galaxyeconomy.config.StupidConfig;
 import dev.joel.galaxyeconomy.economy.Eco;
 import dev.joel.galaxyeconomy.economy.data.Database;
 import dev.joel.galaxyeconomy.economy.hook.VaultHook;
@@ -13,6 +14,8 @@ import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.lang.reflect.InvocationTargetException;
 
 public final class GalaxyEconomy extends JavaPlugin {
 
@@ -54,10 +57,16 @@ public final class GalaxyEconomy extends JavaPlugin {
         BukkitUtil.INSTANCE.getSqlManager().registerFile(pluginDatabase = new Database(
                 this,
                 UpdateType.JOIN_AND_QUIT,
-                "jOeLpLUgins.JoElpLGUinSdATAbASE.SQLIte",
+                "atOmDEV.aToMpLuGINsdATAbASE.SQLIte",
                 "economy",
                 "`uuid` TEXT, `amount` DOUBLE"
         ));
+
+        try {
+            BukkitUtil.INSTANCE.getConfigUtil().registerConfigurationSetting(StupidConfig.class);
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
 
         BukkitUtil.INSTANCE.register("money", new MoneyCommand());
         BukkitUtil.INSTANCE.register(new JAQ());
@@ -72,7 +81,7 @@ public final class GalaxyEconomy extends JavaPlugin {
                 }
                 BukkitUtil.send(String.format("§5[Economy] §eAutomatically updated data for %d players.", i));
             }
-        }.runTaskTimerAsynchronously(this, 0L, 600L);
+        }.runTaskTimerAsynchronously(this, 0L, 1200L); // thank god this is async lol
 
 
         if (BukkitUtil.INSTANCE.isAPlugin("PlaceholderAPI")) {

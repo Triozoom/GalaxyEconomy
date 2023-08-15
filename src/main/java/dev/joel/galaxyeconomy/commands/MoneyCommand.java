@@ -1,7 +1,9 @@
 package dev.joel.galaxyeconomy.commands;
 
 import dev.joel.galaxyeconomy.GalaxyEconomy;
+import dev.joel.galaxyeconomy.config.StupidConfig;
 import dev.joel.galaxyeconomy.economy.Eco;
+import dev.joel.nu.money.Formatter;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -17,20 +19,20 @@ public class MoneyCommand implements CommandExecutor {
                 if (sender instanceof Player) {
                     final Player player = (Player) sender;
                     final double a = GalaxyEconomy.getEconomy().getBalance(player);
-                    player.sendMessage(String.format("§5§lGALAXY BANK §8» §eVocê tem R$ %s de dinheiro.", GalaxyEconomy.getEconomy().format(a)));
-                }
+                    player.sendMessage(StupidConfig.replaceSimple(player, StupidConfig.balanceSelf.replaceAll("%formatted_money%", Formatter.formatShort(a))));
+                }else sender.sendMessage("§cTo view help, fuck you because I didn't do it lol");
                 break;
             case 1:
                 final OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
                 if (p.hasPlayedBefore()) {
                     if (!GalaxyEconomy.getEconomy().hasAccount(p)) {
-                        sender.sendMessage("§5§lGALAXY BANK §8» §eEsse jogador não tem uma conta no banco.");
+                        sender.sendMessage(StupidConfig.replaceSimple(p, StupidConfig.balanceNoAccount));
                         return false;
                     }
                     final double a = GalaxyEconomy.getEconomy().getBalance(p);
-                    sender.sendMessage(String.format("§5§lGALAXY BANK §8» §eO jogador %s tem R$ %s de dinheiro.", p.getName(), GalaxyEconomy.getEconomy().format(a)));
+                    sender.sendMessage(StupidConfig.replaceSimple(p, StupidConfig.balanceOthers.replaceAll("%formatted_money%", Formatter.formatShort(a))));
                 }else {
-                    sender.sendMessage("§5§lGALAXY BANK §8» §eEsse jogador nunca jogou no servidor.");
+                    sender.sendMessage(StupidConfig.replaceSimple(p, StupidConfig.balanceNoPlayed));
                 }
                 break;
             case 3:
@@ -43,9 +45,9 @@ public class MoneyCommand implements CommandExecutor {
                                     final Eco eco = GalaxyEconomy.getEconomy();
                                     final double a = Double.parseDouble(args[2]);
                                     eco.setBalance(player, a);
-                                    sender.sendMessage(String.format("§5§lGALAXY BANK §8» §aO saldo de %s foi definido para %s.", player.getName(), eco.format(a)));
+                                    sender.sendMessage(StupidConfig.replaceSimple(player, StupidConfig.balanceSet.replaceAll("%formatted_money%", Formatter.formatShort(a))));
                                 }catch (NumberFormatException e) {
-                                    sender.sendMessage("§cO valor digitado é inválido.");
+                                    sender.sendMessage(StupidConfig.replaceSimple(player, StupidConfig.balanceAdminCommandInvalidValue));
                                 }
                             }
                             break;
@@ -56,9 +58,9 @@ public class MoneyCommand implements CommandExecutor {
                                     final Eco eco = GalaxyEconomy.getEconomy();
                                     final double a = Double.parseDouble(args[2]);
                                     eco.depositPlayer(playe, a);
-                                    sender.sendMessage(String.format("§5§lGALAXY BANK §8» §aFoi adicionado %s para o saldo de %s.", eco.format(a), playe.getName()));
+                                    sender.sendMessage(StupidConfig.replaceSimple(playe, StupidConfig.balanceAdd.replaceAll("%formatted_money%", Formatter.formatShort(a))));
                                 }catch (NumberFormatException e) {
-                                    sender.sendMessage("§cO valor digitado é inválido.");
+                                    sender.sendMessage(StupidConfig.replaceSimple(playe, StupidConfig.balanceAdminCommandInvalidValue));
                                 }
                             }
                     }
